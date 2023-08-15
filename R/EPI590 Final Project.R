@@ -1,9 +1,19 @@
 #Test file
 #Test
 library(dplyr)
-nbadata.2023 <- read.csv(here::here("data","nba-raptor","latest_RAPTOR_by_team.csv"))
-nbadata.2014_2022 <- read.csv(here::here("data","nba-raptor","modern_RAPTOR_by_team.csv"))
-nbadata.historical <- read.csv(here::here("data","nba-raptor","historical_RAPTOR_by_team.csv"))
+library(here)
+library(gtsummary)
+covid_approval <- read.csv(here::here("data","covid-19-polls-master","covid_approval_polls_adjusted.csv"))
+covid_concerns <- read.csv(here::here("data","covid-19-polls-master","covid_concern_polls_adjusted.csv"))
+
+class(covid_approval$grade)
 
 
-nbadata.2023 <- nbadata.2023 %>% dplyr::arrange(desc(war_total))
+covid_approval <- covid_approval %>% mutate(grade_cat = factor(grade, levels = c("A+","A","A-","B+","B","B-","C+","C","C-","A/B","B/C")))
+
+tbl_summary(
+	covid_approval,
+	by = party,
+	include= c(grade_cat,approve_adjusted)
+
+)
